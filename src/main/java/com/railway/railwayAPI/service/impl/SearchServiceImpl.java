@@ -1,6 +1,6 @@
 package com.railway.railwayAPI.service.impl;
 
-import com.railway.railwayAPI.facade.SearchFacade;
+import com.railway.railwayAPI.facade.Facade;
 import com.railway.railwayAPI.helper.OutputBuilderHelper;
 import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.SearchResponse;
@@ -12,12 +12,12 @@ import java.util.Map;
 @Service
 public class SearchServiceImpl implements SearchService {
 
-    private SearchFacade searchFacade = new SearchFacade();
+    private Facade facade = new Facade();
 //    private OutputBuilderHelper outputBuilderHelper = new OutputBuilderHelper();
 
     @Override
     public SearchResponse getSearchResults(SearchInput searchInput, String trainNumber, String cls) {
-        Map<String, Object> map = searchFacade.getSearchResults(searchInput);
+        Map<String, Object> map = facade.getSearchResults(searchInput);
         SearchResponse searchResponse = buildSearchResponse(searchInput, map, trainNumber, cls);
         return searchResponse;
     }

@@ -1,17 +1,21 @@
 package com.railway.railwayAPI.facade;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.railway.railwayAPI.model.SearchInput;
+import com.railway.railwayAPI.model.internal.AutoComplete;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-public class SearchFacade {
+public class Facade {
     private String apiUrl = "https://www.redbus.in/railways/api";
-    private Logger logger = LoggerFactory.getLogger(SearchFacade.class);
+    private Logger logger = LoggerFactory.getLogger(Facade.class);
     public Map<String, Object> getSearchResults(SearchInput searchInput) {
         String url = apiUrl + "/searchCall";
         RestTemplate restTemplate = new RestTemplate();
@@ -26,5 +30,14 @@ public class SearchFacade {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Object> response = restTemplate.postForEntity(url, trainUpdateInput, Object.class);
         return (Map<String, Object>) response.getBody();
+    }
+
+    public AutoComplete getAutoCompleteResults(String query) throws JsonProcessingException {
+        String url = apiUrl + "/SolrSearch?search={query}";
+        logger.info("GET call to " + url + " to get autocomplete results for " + StringUtils.trimAllWhitespace(query));
+        RestTemplate restTemplate = new RestTemplate();
+        String response = restTemplate.getForObject(url, String.class, StringUtils.trimAllWhitespace(query));
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(response, AutoComplete.class);
     }
 }

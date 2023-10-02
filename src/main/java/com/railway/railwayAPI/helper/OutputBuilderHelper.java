@@ -1,6 +1,6 @@
 package com.railway.railwayAPI.helper;
 
-import com.railway.railwayAPI.facade.SearchFacade;
+import com.railway.railwayAPI.facade.Facade;
 import com.railway.railwayAPI.model.Availablity;
 import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.Train;
@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class OutputBuilderHelper {
-    private static SearchFacade searchFacade = new SearchFacade();
+    private static Facade facade = new Facade();
     public static List<String> getTrainList(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls) {
         List<Map<String, Object>> trains = getTrainsBetweenStations(map, trainNumber);
         List<String> trainList = buildTrainList(trains);
@@ -102,7 +102,7 @@ public class OutputBuilderHelper {
         List<Availablity> availablities = new ArrayList<>();
         tbsAvailability.stream().filter(availabilityMap -> cls == null || cls.equalsIgnoreCase((String) availabilityMap.get("className"))).forEach(availabilityMap -> {
             TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
-            Map<String, Object> avail = getDetails((Map<String, Object>) searchFacade.getTrainUpdates(trainUpdateInput).get("Response"));
+            Map<String, Object> avail = getDetails((Map<String, Object>) facade.getTrainUpdates(trainUpdateInput).get("Response"));
             availablities.add(buildAvailabilty(avail));
         });
         return availablities;
