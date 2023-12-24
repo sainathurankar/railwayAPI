@@ -166,3 +166,8 @@ To run the Docker container and expose the Spring Boot application on port 8080,
 ```bash
 docker run -p 8080:8080 railway-api-spring-boot:latest
 ```
+
+
+## Credits
+
+This project utilizes the RedBus API for train information. We acknowledge and appreciate the services provided by RedBus for making this integration possible.
