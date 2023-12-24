@@ -149,3 +149,20 @@ The `SearchController` handles search requests for train information. It provide
 }
 ```
 
+# Local Setup Steps
+
+## Build Docker Image
+
+To build the Docker image, use the following command:
+
+```bash
+docker build -t railway-api-spring-boot:latest .
+```
+
+## Run Docker Container
+
+To run the Docker container and expose the Spring Boot application on port 8080, use the following command:
+
+```bash
+docker run -p 8080:8080 railway-api-spring-boot:latest
+```
