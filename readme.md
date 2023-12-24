@@ -2,13 +2,23 @@
 
 This API provides information about railway stations and train availability based on user queries. It supports autocomplete for station names and allows users to search for available trains between two stations on a specific date.
 
-## Autocomplete Station Names
+# AutoComplete for Railway Station Names
+
+## Overview
+The `AutoCompleteController` is responsible for handling auto-complete requests for railway station names. It provides a RESTful API endpoint `/autocomplete` that accepts a GET request with a search query and returns a list of matching station names.
+
+## API Endpoint
+- **Endpoint:** `/autocomplete`
+- **Method:** GET
+
+## Request Parameters
+- `query` (required): The search query entered by the user.
 
 ### Endpoint
 `GET /api/autocomplete?query=<search_query>`
 
 ### Example
-`GET /api/autocomplete?query=hub`
+`GET http://localhost:8080/api/autocomplete?query=hub`
 ```json
 {
     "start": 0,
@@ -45,3 +55,97 @@ This API provides information about railway stations and train availability base
     ]
 }
 ```
+
+# Search for Trains
+
+## Overview
+The `SearchController` handles search requests for train information. It provides a RESTful API endpoint `/search` that accepts a POST request with a `SearchInput` object and optional parameters for train number and class.
+
+## API Endpoint
+- **Endpoint:** `/search`
+- **Method:** POST
+- **Request Body:**
+    - `searchInput`: A JSON object containing search criteria.
+    - `trainNumber` (optional): The train number for more specific searches.
+    - `class` (optional): The class of travel for more refined results.
+
+# Example Usage
+
+### Search for Trains
+
+**Endpoint:** `POST http://localhost:8080/api/search`
+
+**Request Body:**
+```json
+{
+  "src": "UBL",
+  "dst": "SBC",
+  "doj": "20231229"
+}
+```
+
+**Response:**
+```json
+{
+  "error": null,
+  "response": null,
+  "status": {
+    "StatusCode": 200,
+    "StatusMsg": "OK"
+  },
+  "trainList": [
+    "13:40 Sbc Vande Bharat 19:45 "
+  ],
+  "trains": [
+    {
+      "trainName": "Sbc Vande Bharat",
+      "trainNumber": "20662",
+      "departureTime": "13:40",
+      "arrivalTime": "19:45",
+      "availablitiesList": [
+        {
+          "quota": "GN",
+          "className": "CC",
+          "status": "Available",
+          "seats": "335",
+          "fare": "1320"
+        },
+        {
+          "quota": "GN",
+          "className": "EC",
+          "status": "GNWL",
+          "seats": "1",
+          "fare": "2395"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Search by Train Number Endpoint
+
+**Endpoint:** `POST http://localhost:8080/api/search?trainNumber=16590`
+
+**Request Body:**
+```json
+{
+  "src": "UBL",
+  "dst": "SBC",
+  "doj": "20231229"
+}
+```
+
+#### Search by Train Number and Class Endpoint
+
+**Endpoint:** `POST http://localhost:8080/api/search?trainNumber=16590&class=SL`
+
+**Request Body:**
+```json
+{
+  "src": "UBL",
+  "dst": "SBC",
+  "doj": "20231229"
+}
+```
+
