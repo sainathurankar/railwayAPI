@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  my-spring-boot-app:
+    image: railway-api-spring-boot-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
