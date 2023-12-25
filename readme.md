@@ -59,7 +59,7 @@ The `AutoCompleteController` is responsible for handling auto-complete requests 
 # Search for Trains
 
 ## Overview
-The `SearchController` handles search requests for train information. It provides a RESTful API endpoint `/search` that accepts a POST request with a `SearchInput` object and optional parameters for train number and class.
+The `SearchController` handles search requests for train information. It provides a RESTful API endpoint `/search` that accepts a POST request with a `SearchInput` object and optional parameters for train number, class and update.
 
 ## API Endpoint
 - **Endpoint:** `/search`
@@ -68,6 +68,7 @@ The `SearchController` handles search requests for train information. It provide
     - `searchInput`: A JSON object containing search criteria.
     - `trainNumber` (optional): The train number for more specific searches.
     - `class` (optional): The class of travel for more refined results.
+    - `update` (optional): default = `false` To fetch the latest availability of seats
 
 # Example Usage
 
@@ -139,6 +140,19 @@ The `SearchController` handles search requests for train information. It provide
 #### Search by Train Number and Class Endpoint
 
 **Endpoint:** `POST http://localhost:8080/api/search?trainNumber=16590&class=SL`
+
+**Request Body:**
+```json
+{
+  "src": "UBL",
+  "dst": "SBC",
+  "doj": "20231229"
+}
+```
+
+#### Search and get updated availability of seats
+
+**Endpoint:** `POST http://localhost:8080/api/search?update=true`
 
 **Request Body:**
 ```json
