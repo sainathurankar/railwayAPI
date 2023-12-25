@@ -16,19 +16,19 @@ public class SearchServiceImpl implements SearchService {
 //    private OutputBuilderHelper outputBuilderHelper = new OutputBuilderHelper();
 
     @Override
-    public SearchResponse getSearchResults(SearchInput searchInput, String trainNumber, String cls) {
+    public SearchResponse getSearchResults(SearchInput searchInput, String trainNumber, String cls, String update) {
         Map<String, Object> map = facade.getSearchResults(searchInput);
-        SearchResponse searchResponse = buildSearchResponse(searchInput, map, trainNumber, cls);
+        SearchResponse searchResponse = buildSearchResponse(searchInput, map, trainNumber, cls, update);
         return searchResponse;
     }
 
-    private SearchResponse buildSearchResponse(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls) {
+    private SearchResponse buildSearchResponse(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls, String update) {
         SearchResponse searchResponse = new SearchResponse();
 //        searchResponse.setError((String) map.get("Error"));
 //        searchResponse.setResponse(map.get("Response"));
         searchResponse.setStatus(map.get("Status"));
         searchResponse.setTrainList(OutputBuilderHelper.getTrainList(searchInput, (Map<String, Object>) map.get("Response"), trainNumber, cls));
-        searchResponse.setTrains(OutputBuilderHelper.getTrainListV2(searchInput, (Map<String, Object>) map.get("Response"),trainNumber, cls));
+        searchResponse.setTrains(OutputBuilderHelper.getTrainListV2(searchInput, (Map<String, Object>) map.get("Response"),trainNumber, cls, update));
         return searchResponse;
     }
 }

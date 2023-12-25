@@ -72,37 +72,42 @@ public class OutputBuilderHelper {
         return null;
     }
 
-    public static List<Train> getTrainListV2(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls) {
+    public static List<Train> getTrainListV2(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls, String update) {
         List<Map<String, Object>> trains = getTrainsBetweenStations(map, trainNumber);
-        List<Train> trainList = buildTrainListV2(searchInput, trains, cls);
+        List<Train> trainList = buildTrainListV2(searchInput, trains, cls, update);
         return trainList;
     }
 
-    private static List<Train> buildTrainListV2(SearchInput searchInput, List<Map<String, Object>> trains, String cls) {
+    private static List<Train> buildTrainListV2(SearchInput searchInput, List<Map<String, Object>> trains, String cls, String update) {
         List<Train> trainList = new ArrayList<>();
         if (trains != null) {
             trains.stream().forEach(train -> {
-                trainList.add(buildTrain(searchInput, train, cls));
+                trainList.add(buildTrain(searchInput, train, cls, update));
             });
         }
         return trainList;
     }
 
-    private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls) {
+    private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls, String update) {
         Train train = new Train();
         train.setTrainName((String) trainMap.get("trainName"));
         train.setTrainNumber((String) trainMap.get("trainNumber"));
         train.setDepartureTime((String) trainMap.get("departureTime"));
         train.setArrivalTime((String) trainMap.get("arrivalTime"));
-        train.setAvailablitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls));
+        train.setAvailablitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
         return train;
     }
 
-    private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls) {
+    private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) {
         List<Availablity> availablities = new ArrayList<>();
         tbsAvailability.stream().filter(availabilityMap -> cls == null || cls.equalsIgnoreCase((String) availabilityMap.get("className"))).forEach(availabilityMap -> {
             TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
-            Map<String, Object> avail = getDetails((Map<String, Object>) facade.getTrainUpdates(trainUpdateInput).get("Response"));
+            Map<String, Object> avail = new LinkedHashMap<>();
+            if (Boolean.valueOf(update)) {
+                avail = getDetails((Map<String, Object>) facade.getTrainUpdates(trainUpdateInput).get("Response"));
+            } else {
+                avail = availabilityMap;
+            }
             availablities.add(buildAvailabilty(avail));
         });
         return availablities;
@@ -119,6 +124,7 @@ public class OutputBuilderHelper {
         availablity.setStatus((String) availabilityMap.get("availablityStatus"));
         availablity.setSeats((String) availabilityMap.get("availablityNumber"));
         availablity.setFare(String.valueOf(availabilityMap.get("totalFare")));
+        availablity.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
         return availablity;
     }
 }

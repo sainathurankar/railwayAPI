@@ -16,12 +16,12 @@ public class SearchController {
     Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public SearchResponse search(@RequestBody SearchInput searchInput, @RequestParam(value = "trainNumber", required = false) String trainNumber, @RequestParam(value = "class", required = false) String cls){
+    public SearchResponse search(@RequestBody SearchInput searchInput, @RequestParam(value = "trainNumber", required = false) String trainNumber, @RequestParam(value = "class", required = false) String cls, @RequestParam(value = "update", required = false, defaultValue = "false") String update) {
         long startTime = System.currentTimeMillis();
         SearchResponse response = null;
         try {
             logger.info("Inside '/search' mapping search() method of SearchController");
-             response = searchService.getSearchResults(searchInput, trainNumber, cls);
+             response = searchService.getSearchResults(searchInput, trainNumber, cls, update);
         } catch (Exception e) {
             logger.error("Exception caught in search() method:", e);
         } finally {
