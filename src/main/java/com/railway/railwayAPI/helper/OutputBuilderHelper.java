@@ -122,7 +122,7 @@ public class OutputBuilderHelper {
         return new TrainUpdateInput((String) availabilityMap.get("quota"), (String) trainMap.get("toStnCode"), (String) trainMap.get("fromStnCode"), (String) trainMap.get("trainNumber"), (String) availabilityMap.get("className"), searchInput.getDoj());
     }
 
-    private static Availablity buildAvailabilty(Map<String, Object> availabilityMap) {
+    public static Availablity buildAvailabilty(Map<String, Object> availabilityMap) {
         Availablity availablity = new Availablity();
         availablity.setQuota((String) availabilityMap.get("quota"));
         availablity.setClassName((String) availabilityMap.get("className"));

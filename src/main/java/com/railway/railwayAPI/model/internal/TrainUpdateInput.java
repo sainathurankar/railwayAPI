@@ -1,5 +1,8 @@
 package com.railway.railwayAPI.model.internal;
 
+import lombok.Builder;
+
+@Builder
 public class TrainUpdateInput {
     private String quota;
     private String destination;
@@ -13,7 +16,7 @@ public class TrainUpdateInput {
         this.destination = destination;
         this.source = source;
         this.trainNumber = trainNumber;
-        Class = aClass;
+        this.Class = aClass;
         this.doj = doj;
     }
 
