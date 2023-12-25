@@ -56,6 +56,7 @@ public class OutputBuilderHelper {
                         List<String> trainNumberList = List.of(trainNumber.split(","));
                         trains = trains.stream().filter(t -> trainNumberList.contains((String) t.get("trainNumber"))).collect(Collectors.toList());
                     }
+                    trains = trains.stream().filter(t -> !(Boolean) t.get("clusterTrain")).collect(Collectors.toList());
                 }
             }
         }
@@ -94,7 +95,7 @@ public class OutputBuilderHelper {
         train.setTrainNumber((String) trainMap.get("trainNumber"));
         train.setDepartureTime((String) trainMap.get("departureTime"));
         train.setArrivalTime((String) trainMap.get("arrivalTime"));
-        train.setAvailablitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
+        train.setAvailabilitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
         return train;
     }
 
