@@ -130,6 +130,9 @@ public class OutputBuilderHelper {
         availablity.setSeats((String) availabilityMap.get("availablityNumber"));
         availablity.setFare(String.valueOf(availabilityMap.get("totalFare")));
         availablity.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
+        if (availabilityMap.get("lastUpdatedOnRaw") != null) {
+            availablity.setLastUpdatedOnRaw(Long.valueOf(String.valueOf(availabilityMap.get("lastUpdatedOnRaw"))));
+        }
         return availablity;
     }
 }

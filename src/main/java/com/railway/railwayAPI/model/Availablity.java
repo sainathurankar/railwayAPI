@@ -16,4 +16,5 @@ public class Availablity {
     private String seats;
     private String fare;
     private String lastUpdatedOn;
+    private Long lastUpdatedOnRaw;
 }
