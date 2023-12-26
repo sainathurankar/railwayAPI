@@ -1,4 +1,4 @@
-# Railway Station Search API
+# Railway Search API
 
 This API provides information about railway stations and train availability based on user queries. It supports autocomplete for station names and allows users to search for available trains between two stations on a specific date.
 
