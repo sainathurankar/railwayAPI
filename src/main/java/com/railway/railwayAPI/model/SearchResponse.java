@@ -12,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchResponse {
-    private String error;
+    private String errorCode;
+    private String detailedMsg;
     private Object response;
     private Object status;
     private List<String> trainList;

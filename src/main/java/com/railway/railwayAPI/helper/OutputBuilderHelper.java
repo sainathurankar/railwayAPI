@@ -63,7 +63,7 @@ public class OutputBuilderHelper {
         return trains;
     }
 
-    private static Map<String, Object> getDetails(Map<String, Object> map) {
+    public static Map<String, Object> getDetails(Map<String, Object> map) {
         if (map.containsKey("Data")) {
             Map<String, Object> data = (Map<String, Object>) map.get("Data");
             if (data.containsKey("details")) {
