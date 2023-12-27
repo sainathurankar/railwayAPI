@@ -24,5 +24,6 @@ public class Train {
     private String toStation;
     private String fromStationCode;
     private String toStationCode;
+    private List<String> availableClasses;
 }
 

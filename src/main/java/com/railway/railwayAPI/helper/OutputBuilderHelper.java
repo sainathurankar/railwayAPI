@@ -102,6 +102,7 @@ public class OutputBuilderHelper {
         train.setDepartureDate((String) trainMap.get("departureDate"));
         train.setArrivalDate((String) trainMap.get("arrivalDate"));
         train.setDuration((String) trainMap.get("duration"));
+        train.setAvailableClasses((List<String>) trainMap.get("avlClasses"));
         train.setAvailabilitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
         return train;
     }
@@ -133,6 +134,7 @@ public class OutputBuilderHelper {
         availablity.setSeats((String) availabilityMap.get("availablityNumber"));
         availablity.setFare(String.valueOf(availabilityMap.get("totalFare")));
         availablity.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
+        availablity.setAvailablityDate((String) availabilityMap.get("availablityDate"));
         if (availabilityMap.get("lastUpdatedOnRaw") != null) {
             availablity.setLastUpdatedOnRaw(Long.valueOf(String.valueOf(availabilityMap.get("lastUpdatedOnRaw"))));
         }
