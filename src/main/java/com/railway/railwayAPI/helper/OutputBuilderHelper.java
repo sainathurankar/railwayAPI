@@ -99,6 +99,9 @@ public class OutputBuilderHelper {
         train.setToStation((String) trainMap.get("toStnName"));
         train.setFromStationCode((String) trainMap.get("fromStnCode"));
         train.setToStationCode((String) trainMap.get("toStnCode"));
+        train.setDepartureDate((String) trainMap.get("departureDate"));
+        train.setArrivalDate((String) trainMap.get("arrivalDate"));
+        train.setDuration((String) trainMap.get("duration"));
         train.setAvailabilitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
         return train;
     }

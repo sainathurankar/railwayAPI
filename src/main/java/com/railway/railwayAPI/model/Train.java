@@ -16,6 +16,9 @@ public class Train {
     private String trainNumber;
     private String departureTime;
     private String arrivalTime;
+    private String duration;
+    private String departureDate;
+    private String arrivalDate;
     private List<Availablity> availabilitiesList;
     private String fromStation;
     private String toStation;
