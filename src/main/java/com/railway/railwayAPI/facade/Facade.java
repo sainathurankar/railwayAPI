@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Facade {
@@ -28,7 +30,14 @@ public class Facade {
         String url = apiUrl + "/tapToUpdate";
         logger.info("Post call to " + url + " for train number: " + trainUpdateInput.getTrainNumber() + " and class: "+ trainUpdateInput.getclass());
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Object> response = restTemplate.postForEntity(url, trainUpdateInput, Object.class);
+        ResponseEntity<Object> response = null;
+        try {
+            response = restTemplate.postForEntity(url, trainUpdateInput, Object.class);
+        } catch (HttpClientErrorException errorException) {
+            logger.error(errorException.getMessage());
+            return new LinkedHashMap<>();
+        }
+
         return (Map<String, Object>) response.getBody();
     }
 
