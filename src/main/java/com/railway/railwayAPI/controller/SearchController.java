@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,6 +54,24 @@ public class SearchController {
             long endTime = System.currentTimeMillis();
             logger.info("getTrainUpdate() Executed in " + (endTime - startTime) + "ms");
             logger.info("getTrainUpdate() method ended");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "/search/availabilityNearBy", method = RequestMethod.POST)
+    public ResponseEntity<?> getAvailabilityNearByDays(@RequestBody TrainUpdateInput trainUpdateInput) {
+        long startTime = System.currentTimeMillis();
+        List<Availablity> response = null;
+        try {
+            logger.info("Inside '/search/availabilityNearBy' mapping getAvailabilityNearByDays() method of SearchController");
+            response = searchService.getAvailabilityNearByDays(trainUpdateInput);
+        } catch (Exception e) {
+            logger.error("Exception caught in search() method:", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
+        } finally {
+            long endTime = System.currentTimeMillis();
+            logger.info("getAvailabilityNearByDays() Executed in " + (endTime - startTime) + "ms");
+            logger.info("getAvailabilityNearByDays() method ended");
         }
         return ResponseEntity.ok(response);
     }
