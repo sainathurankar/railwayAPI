@@ -25,5 +25,6 @@ public class Train {
     private String fromStationCode;
     private String toStationCode;
     private List<String> availableClasses;
+    private Boolean isAlternate;
 }
 
