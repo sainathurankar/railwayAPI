@@ -103,6 +103,7 @@ public class OutputBuilderHelper {
         train.setArrivalDate((String) trainMap.get("arrivalDate"));
         train.setDuration((String) trainMap.get("duration"));
         train.setAvailableClasses((List<String>) trainMap.get("avlClasses"));
+        train.setIsAlternate((Boolean) trainMap.get("isAlternate"));
         train.setAvailabilitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
         return train;
     }
