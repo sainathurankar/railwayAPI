@@ -10,7 +10,17 @@ public class TrainUpdateInput {
     private String trainNumber;
     private String Class;
     private String doj;
-    private int numberOfDays = 6;
+    private int numberOfDays = 14;
+
+    public TrainUpdateInput(TrainUpdateInput trainUpdateInput) {
+        this.quota = trainUpdateInput.getQuota();
+        this.destination = trainUpdateInput.getDestination();
+        this.source = trainUpdateInput.getSource();
+        this.trainNumber = trainUpdateInput.getTrainNumber();
+        this.Class = trainUpdateInput.getclass();
+        this.doj = trainUpdateInput.getDoj();
+        this.numberOfDays = trainUpdateInput.getNumberOfDays();
+    }
 
     public int getNumberOfDays() {
         return numberOfDays;

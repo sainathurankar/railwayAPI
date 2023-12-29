@@ -8,11 +8,13 @@ import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.SearchResponse;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 import com.railway.railwayAPI.service.SearchService;
+import com.railway.railwayAPI.task.AvailabilityTask;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -41,16 +43,18 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Availablity> getAvailabilityNearByDays(TrainUpdateInput trainUpdateInput) {
-        List<Availablity> availablityList = new ArrayList<>();
-        for (int i = 0; i< trainUpdateInput.getNumberOfDays(); i++) {
-            Availablity availablity = getTrainUpdate(trainUpdateInput);
-            if (availablity != null) {
-                availablityList.add(availablity);
-            }
-            trainUpdateInput.setDoj(Utils.getNextDayDate(trainUpdateInput.getDoj()));
+        List<TrainUpdateInput> trainUpdateInputs = new ArrayList<>();
+
+        TrainUpdateInput trainUpdateInp = new TrainUpdateInput(trainUpdateInput);
+        for (int i = 0; i < trainUpdateInput.getNumberOfDays(); i++) {
+            trainUpdateInputs.add(trainUpdateInp);
+            trainUpdateInp = new TrainUpdateInput(trainUpdateInp);
+            trainUpdateInp.setDoj(Utils.getNextDayDate(trainUpdateInp.getDoj()));
         }
-        return availablityList;
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        return forkJoinPool.invoke(new AvailabilityTask(trainUpdateInputs, 0, trainUpdateInput.getNumberOfDays()));
     }
+
 
     private SearchResponse buildSearchResponse(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls, String update) {
         SearchResponse searchResponse = new SearchResponse();
