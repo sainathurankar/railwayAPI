@@ -112,6 +112,24 @@ public class SearchController {
         return ResponseEntity.ok(response);
     }
 
+    @RequestMapping(value = "/v5/search/availabilityNearBy", method = RequestMethod.POST)
+    public ResponseEntity<?> getAvailabilityNearByDaysV5(@RequestBody TrainUpdateInput trainUpdateInput) {
+        long startTime = System.currentTimeMillis();
+        List<Availablity> response = null;
+        try {
+            logger.info("Inside '/search/availabilityNearByV5' mapping getAvailabilityNearByDaysV5() method of SearchController");
+            response = searchService.getAvailabilityNearByDaysV5(trainUpdateInput);
+        } catch (Exception e) {
+            logger.error("Exception caught in getAvailabilityNearByDaysV5() method:", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
+        } finally {
+            long endTime = System.currentTimeMillis();
+            logger.info("getAvailabilityNearByDaysV5() Executed in " + (endTime - startTime) + "ms");
+            logger.info("getAvailabilityNearByDaysV5() method ended");
+        }
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }
