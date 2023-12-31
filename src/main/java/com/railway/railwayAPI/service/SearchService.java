@@ -14,4 +14,6 @@ public interface SearchService {
     Availablity getTrainUpdate(TrainUpdateInput trainUpdateInput);
 
     List<Availablity> getAvailabilityNearByDays(TrainUpdateInput trainUpdateInput);
+
+    List<Availablity> getAvailabilityNearByDaysV3(TrainUpdateInput trainUpdateInput);
 }
