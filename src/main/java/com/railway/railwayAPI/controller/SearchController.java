@@ -48,7 +48,7 @@ public class SearchController {
             logger.info("Inside '/search/trainUpdate' mapping getTrainUpdate() method of SearchController");
             response = searchService.getTrainUpdate(trainUpdateInput);
         } catch (Exception e) {
-            logger.error("Exception caught in search() method:", e);
+            logger.error("Exception caught in getTrainUpdate() method:", e);
             return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
         } finally {
             long endTime = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class SearchController {
             logger.info("Inside '/search/availabilityNearBy' mapping getAvailabilityNearByDays() method of SearchController");
             response = searchService.getAvailabilityNearByDays(trainUpdateInput);
         } catch (Exception e) {
-            logger.error("Exception caught in search() method:", e);
+            logger.error("Exception caught in getAvailabilityNearByDays() method:", e);
             return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
         } finally {
             long endTime = System.currentTimeMillis();
@@ -75,6 +75,25 @@ public class SearchController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @RequestMapping(value = "/v3/search/availabilityNearBy", method = RequestMethod.POST)
+    public ResponseEntity<?> getAvailabilityNearByDaysV3(@RequestBody TrainUpdateInput trainUpdateInput) {
+        long startTime = System.currentTimeMillis();
+        List<Availablity> response = null;
+        try {
+            logger.info("Inside '/search/availabilityNearByV3' mapping getAvailabilityNearByDays() method of SearchController");
+            response = searchService.getAvailabilityNearByDaysV3(trainUpdateInput);
+        } catch (Exception e) {
+            logger.error("Exception caught in getAvailabilityNearByDaysV3() method:", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
+        } finally {
+            long endTime = System.currentTimeMillis();
+            logger.info("getAvailabilityNearByDays() Executed in " + (endTime - startTime) + "ms");
+            logger.info("getAvailabilityNearByDays() method ended");
+        }
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }

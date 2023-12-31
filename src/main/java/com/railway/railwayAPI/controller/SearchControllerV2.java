@@ -28,7 +28,7 @@ public class SearchControllerV2 {
             log.info("Inside '/search/availabilityNearBy' mapping getAvailabilityNearByDays() method of SearchController");
             response = searchServiceV2.getAvailabilityNearByDays(trainUpdateInput);
         } catch (Exception e) {
-            log.error("Exception caught in search() method:", e);
+            log.error("Exception caught in getAvailabilityNearByDays() method:", e);
             return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
         } finally {
             long endTime = System.currentTimeMillis();
@@ -37,4 +37,5 @@ public class SearchControllerV2 {
         }
         return ResponseEntity.ok(response);
     }
+
 }
