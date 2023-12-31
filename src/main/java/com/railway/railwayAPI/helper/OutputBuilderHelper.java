@@ -105,6 +105,13 @@ public class OutputBuilderHelper {
         train.setAvailableClasses((List<String>) trainMap.get("avlClasses"));
         train.setIsAlternate((Boolean) trainMap.get("isAlternate"));
         train.setAvailabilitiesList(buildAvailabiltyList(searchInput, trainMap, (List<Map<String, Object>>) trainMap.get("tbsAvailability"), cls, update));
+        train.setRunningMon((String) trainMap.get("runningMon"));
+        train.setRunningTue((String) trainMap.get("runningTue"));
+        train.setRunningWed((String) trainMap.get("runningWed"));
+        train.setRunningThu((String) trainMap.get("runningThu"));
+        train.setRunningFri((String) trainMap.get("runningFri"));
+        train.setRunningSat((String) trainMap.get("runningSat"));
+        train.setRunningSun((String) trainMap.get("runningSun"));
         return train;
     }
 

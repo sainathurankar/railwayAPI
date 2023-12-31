@@ -26,5 +26,12 @@ public class Train {
     private String toStationCode;
     private List<String> availableClasses;
     private Boolean isAlternate;
+    private String runningMon;
+    private String runningTue;
+    private String runningWed;
+    private String runningThu;
+    private String runningFri;
+    private String runningSat;
+    private String runningSun;
 }
 
