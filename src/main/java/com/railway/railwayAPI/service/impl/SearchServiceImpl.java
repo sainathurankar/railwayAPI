@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 @Service
@@ -82,6 +84,55 @@ public class SearchServiceImpl implements SearchService {
         }
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         return forkJoinPool.invoke(new AvailabilityTaskV2(trainUpdateInputs, 0, trainUpdateInput.getNumberOfDays(), new SearchServiceImpl()));
+    }
+
+    /*
+    * Async
+    */
+    @Override
+    public List<Availablity> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput) {
+        int numberOfDays = trainUpdateInput.getNumberOfDays();
+        List<CompletableFuture<List<Availablity>>> futures = new ArrayList<>();
+
+        for (int i = 0; i < numberOfDays; i++) {
+            int dayIndex = i;
+            CompletableFuture<List<Availablity>> future = CompletableFuture.supplyAsync(() -> {
+                try {
+                    return getTrainUpdateV3(trainUpdateInput, dayIndex);
+                } catch (Exception e) {
+                    // Log the exception or perform error handling
+                    e.printStackTrace();
+                    return new ArrayList<>();  // Return an empty list or handle the error case accordingly
+                }
+            });
+            futures.add(future);
+        }
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+        );
+
+        CompletableFuture<List<Availablity>> combinedFuture = allOf.thenApply(v ->
+                futures.stream()
+                        .map(CompletableFuture::join)
+                        .flatMap(List::stream)
+                        .collect(ArrayList::new, List::add, List::addAll)
+        );
+
+        try {
+            return combinedFuture.get(); // This will block until all futures are completed
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Availablity> getTrainUpdateV3(TrainUpdateInput trainUpdateInput, int day) {
+        SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), Utils.addDate(trainUpdateInput.getDoj(), day + 1)), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
+        List<Train> trains = searchResponse.getTrains();
+        if (!trains.isEmpty()) {
+            return trains.get(0).getAvailabilitiesList();
+        }
+        return null;
     }
 
     public List<Availablity> getTrainUpdateV2(TrainUpdateInput trainUpdateInput) {

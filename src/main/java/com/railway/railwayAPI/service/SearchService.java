@@ -18,4 +18,6 @@ public interface SearchService {
     List<Availablity> getAvailabilityNearByDaysV3(TrainUpdateInput trainUpdateInput);
 
     List<Availablity> getAvailabilityNearByDaysV4(TrainUpdateInput trainUpdateInput);
+
+    List<Availablity> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput);
 }
