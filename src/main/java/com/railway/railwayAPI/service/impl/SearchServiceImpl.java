@@ -10,6 +10,7 @@ import com.railway.railwayAPI.model.Train;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 import com.railway.railwayAPI.service.SearchService;
 import com.railway.railwayAPI.task.AvailabilityTask;
+import com.railway.railwayAPI.task.AvailabilityTaskV2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,7 +70,21 @@ public class SearchServiceImpl implements SearchService {
         return availablityList;
     }
 
-    private List<Availablity> getTrainUpdateV2(TrainUpdateInput trainUpdateInput) {
+    @Override
+    public List<Availablity> getAvailabilityNearByDaysV4(TrainUpdateInput trainUpdateInput) {
+        List<TrainUpdateInput> trainUpdateInputs = new ArrayList<>();
+
+        TrainUpdateInput trainUpdateInp = new TrainUpdateInput(trainUpdateInput);
+        for (int i = 0; i < trainUpdateInput.getNumberOfDays(); i++) {
+            trainUpdateInputs.add(trainUpdateInp);
+            trainUpdateInp = new TrainUpdateInput(trainUpdateInp);
+            trainUpdateInp.setDoj(Utils.getNextDayDate(trainUpdateInp.getDoj()));
+        }
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        return forkJoinPool.invoke(new AvailabilityTaskV2(trainUpdateInputs, 0, trainUpdateInput.getNumberOfDays(), new SearchServiceImpl()));
+    }
+
+    public List<Availablity> getTrainUpdateV2(TrainUpdateInput trainUpdateInput) {
         SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), trainUpdateInput.getDoj()), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
         List<Train> trains = searchResponse.getTrains();
         if (!trains.isEmpty()) {
