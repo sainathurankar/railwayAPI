@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public class SearchController {
     @RequestMapping(value = "/v5/search/availabilityNearBy", method = RequestMethod.POST)
     public ResponseEntity<?> getAvailabilityNearByDaysV5(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        List<Availablity> response = null;
+        ArrayList<Object> response = null;
         try {
             logger.info("Inside '/search/availabilityNearByV5' mapping getAvailabilityNearByDaysV5() method of SearchController");
             response = searchService.getAvailabilityNearByDaysV5(trainUpdateInput);

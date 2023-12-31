@@ -90,7 +90,7 @@ public class SearchServiceImpl implements SearchService {
     * Async
     */
     @Override
-    public List<Availablity> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput) {
+    public ArrayList<Object> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput) {
         int numberOfDays = trainUpdateInput.getNumberOfDays();
         List<CompletableFuture<List<Availablity>>> futures = new ArrayList<>();
 
@@ -98,7 +98,11 @@ public class SearchServiceImpl implements SearchService {
             int dayIndex = i;
             CompletableFuture<List<Availablity>> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    return getTrainUpdateV3(trainUpdateInput, dayIndex);
+                    List<Availablity> availablityList = getTrainUpdateV3(trainUpdateInput, dayIndex);
+                    if (availablityList != null) {
+                        return availablityList;
+                    }
+                    return new ArrayList<>();
                 } catch (Exception e) {
                     // Log the exception or perform error handling
                     e.printStackTrace();
@@ -112,9 +116,17 @@ public class SearchServiceImpl implements SearchService {
                 futures.toArray(new CompletableFuture[0])
         );
 
-        CompletableFuture<List<Availablity>> combinedFuture = allOf.thenApply(v ->
+        CompletableFuture<ArrayList<Object>> combinedFuture = allOf.thenApply(v ->
                 futures.stream()
-                        .map(CompletableFuture::join)
+                        .map(f -> {
+                            try {
+                                return f.join();
+                            } catch (Exception e) {
+                                // Log the exception for debugging purposes
+                                e.printStackTrace();
+                                return new ArrayList<>();
+                            }
+                        })
                         .flatMap(List::stream)
                         .collect(ArrayList::new, List::add, List::addAll)
         );
@@ -127,7 +139,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private List<Availablity> getTrainUpdateV3(TrainUpdateInput trainUpdateInput, int day) {
-        SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), Utils.addDate(trainUpdateInput.getDoj(), day + 1)), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
+        SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), Utils.addDate(trainUpdateInput.getDoj(), day)), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
         List<Train> trains = searchResponse.getTrains();
         if (!trains.isEmpty()) {
             return trains.get(0).getAvailabilitiesList();

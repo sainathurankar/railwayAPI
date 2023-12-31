@@ -5,8 +5,8 @@ import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.SearchResponse;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface SearchService {
     SearchResponse getSearchResults(SearchInput searchInput, String trainNumber, String cls, String update);
@@ -19,5 +19,5 @@ public interface SearchService {
 
     List<Availablity> getAvailabilityNearByDaysV4(TrainUpdateInput trainUpdateInput);
 
-    List<Availablity> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput);
+    ArrayList<Object> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput);
 }
