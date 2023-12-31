@@ -81,7 +81,7 @@ public class SearchController {
         long startTime = System.currentTimeMillis();
         List<Availablity> response = null;
         try {
-            logger.info("Inside '/search/availabilityNearByV3' mapping getAvailabilityNearByDays() method of SearchController");
+            logger.info("Inside '/search/availabilityNearByV3' mapping getAvailabilityNearByDaysV3() method of SearchController");
             response = searchService.getAvailabilityNearByDaysV3(trainUpdateInput);
         } catch (Exception e) {
             logger.error("Exception caught in getAvailabilityNearByDaysV3() method:", e);
@@ -90,6 +90,24 @@ public class SearchController {
             long endTime = System.currentTimeMillis();
             logger.info("getAvailabilityNearByDays() Executed in " + (endTime - startTime) + "ms");
             logger.info("getAvailabilityNearByDays() method ended");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "/v4/search/availabilityNearBy", method = RequestMethod.POST)
+    public ResponseEntity<?> getAvailabilityNearByDaysV4(@RequestBody TrainUpdateInput trainUpdateInput) {
+        long startTime = System.currentTimeMillis();
+        List<Availablity> response = null;
+        try {
+            logger.info("Inside '/search/availabilityNearByV4' mapping getAvailabilityNearByDaysV4() method of SearchController");
+            response = searchService.getAvailabilityNearByDaysV4(trainUpdateInput);
+        } catch (Exception e) {
+            logger.error("Exception caught in getAvailabilityNearByDaysV4() method:", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", true, "message", e.getMessage()));
+        } finally {
+            long endTime = System.currentTimeMillis();
+            logger.info("getAvailabilityNearByDaysV4() Executed in " + (endTime - startTime) + "ms");
+            logger.info("getAvailabilityNearByDaysV4() method ended");
         }
         return ResponseEntity.ok(response);
     }
