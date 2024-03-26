@@ -5,6 +5,8 @@ import com.railway.railwayAPI.facade.Facade;
 import com.railway.railwayAPI.model.autocomplete.AutoCompleteResponse;
 import com.railway.railwayAPI.model.internal.AutoComplete;
 import com.railway.railwayAPI.service.AutoCompleteService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,9 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@CacheConfig(cacheNames = "autocompleteCache")
 public class AutoCompleteServiceImpl implements AutoCompleteService {
 
     private Facade facade = new Facade();
+
+    @Cacheable(key = "#query", unless = "#result == null")
     @Override
     public AutoCompleteResponse getResults(String query) throws JsonProcessingException {
         AutoComplete result = facade.getAutoCompleteResults(query);
