@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,16 +47,31 @@ public class SearchFilterServiceimpl implements SearchFiltersService {
 
 
     private Filter buildFilter(com.railway.railwayAPI.config.model.Filter filter, SearchResponse response) {
-        Filter filterObj = Filter.builder().name(filter.getName()).options(buildFilterOptions(filter, response)).build();
+        Filter filterObj = Filter.builder().id(filter.getId()).name(filter.getName()).options(buildFilterOptions(filter, response)).build();
         return filterObj;
 
     }
 
     private List<FilterOption> buildFilterOptions(com.railway.railwayAPI.config.model.Filter filter, SearchResponse response) {
         List<FilterOption> filterOptions = new ArrayList<>();
+        Map<String, Integer> optionCounts = new HashMap<>();
+
         response.getTrains().forEach(train -> {
             Map<String, Object> trainMap = train.toMap();
-            FilterOption filterOption = FilterOption.builder().id((String) trainMap.get(filter.getValue())).value((String) trainMap.get(filter.getValue())).displayName((String) trainMap.get(filter.getDisplayName())).build();
+            String value = (String) trainMap.get(filter.getValue());
+            String displayName = (String) trainMap.get(filter.getDisplayName());
+
+            // Update option counts
+            optionCounts.put(value, optionCounts.getOrDefault(value, 0) + 1);
+
+            // Build FilterOption
+            FilterOption filterOption = FilterOption.builder()
+                    .id(value)
+                    .value(value)
+                    .displayName(displayName)
+                    .count(optionCounts.get(value))
+                    .build();
+
             filterOptions.add(filterOption);
         });
         return filterOptions;

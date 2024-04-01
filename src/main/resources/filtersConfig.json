@@ -1,6 +1,7 @@
 {
   "filters": [
     {
+      "id": "trainNumber",
       "name": "Train Name",
       "value": "trainNumber",
       "displayName": "trainName",

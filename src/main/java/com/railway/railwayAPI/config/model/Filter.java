@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class Filter {
 
+    private String id;
     private String name;
     private String value;
     private String displayName;
@@ -17,7 +18,8 @@ public class Filter {
     @Override
     public String toString() {
         return "Filter{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", fieldType='" + fieldType + '\'' +
