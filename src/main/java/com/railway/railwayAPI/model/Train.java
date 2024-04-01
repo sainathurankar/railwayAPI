@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -33,5 +36,19 @@ public class Train {
     private String runningFri;
     private String runningSat;
     private String runningSun;
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        Field[] fields = this.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                map.put(field.getName(), (Object) field.get(this));
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 }
 

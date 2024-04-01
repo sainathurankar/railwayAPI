@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -18,4 +21,5 @@ public class SearchResponse {
     private Object status;
     private List<String> trainList;
     private List<Train> trains;
+
 }
