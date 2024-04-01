@@ -11,4 +11,5 @@ public class FilterOption {
     private String id;
     private String displayName;
     private String value;
+    private Integer count;
 }

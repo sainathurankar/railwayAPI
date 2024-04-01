@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Filter {
+    private String id;
     private String name;
     private List<FilterOption> options;
 }
