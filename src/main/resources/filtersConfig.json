@@ -1,0 +1,10 @@
+{
+  "filters": [
+    {
+      "name": "Train Name",
+      "value": "trainNumber",
+      "displayName": "trainName",
+      "fieldType": "string"
+    }
+  ]
+}

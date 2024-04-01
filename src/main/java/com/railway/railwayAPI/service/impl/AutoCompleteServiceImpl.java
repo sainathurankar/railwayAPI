@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@CacheConfig(cacheNames = "autocompleteCache")
+@CacheConfig(cacheNames = "cache")
 public class AutoCompleteServiceImpl implements AutoCompleteService {
 
     private Facade facade = new Facade();
