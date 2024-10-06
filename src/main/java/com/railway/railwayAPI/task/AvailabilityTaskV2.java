@@ -1,15 +1,21 @@
 package com.railway.railwayAPI.task;
 
-import com.railway.railwayAPI.model.Availability;
+import com.railway.railwayAPI.facade.Facade;
+import com.railway.railwayAPI.helper.OutputBuilderHelper;
+import com.railway.railwayAPI.model.Availablity;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
+import com.railway.railwayAPI.service.SearchService;
 import com.railway.railwayAPI.service.impl.SearchServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.RecursiveTask;
 
 
-public class AvailabilityTaskV2 extends RecursiveTask<List<Availability>> {
+public class AvailabilityTaskV2 extends RecursiveTask<List<Availablity>> {
     private int startDay;
     private int endDay;
 
@@ -25,13 +31,13 @@ public class AvailabilityTaskV2 extends RecursiveTask<List<Availability>> {
     }
 
     @Override
-    protected List<Availability> compute() {
-        List<Availability> availabilityList = new ArrayList<>();
+    protected List<Availablity> compute() {
+        List<Availablity> availablityList = new ArrayList<>();
 
         if (endDay - startDay <= 1) {
-            List<Availability> availability = getTrainUpdate(trainUpdateInputs.get(startDay));
-            if (availability != null) {
-                availabilityList.addAll(availability);
+            List<Availablity> availablity = getTrainUpdate(trainUpdateInputs.get(startDay));
+            if (availablity != null) {
+                availablityList.addAll(availablity);
             }
         } else {
             int mid = (startDay + endDay) / 2;
@@ -40,19 +46,19 @@ public class AvailabilityTaskV2 extends RecursiveTask<List<Availability>> {
             AvailabilityTaskV2 rightTask = new AvailabilityTaskV2(trainUpdateInputs, mid, endDay, new SearchServiceImpl());
 
             leftTask.fork();
-            List<Availability> rightResult = rightTask.compute();
-            List<Availability> leftResult = leftTask.join();
+            List<Availablity> rightResult = rightTask.compute();
+            List<Availablity> leftResult = leftTask.join();
 
-            availabilityList.addAll(leftResult);
-            availabilityList.addAll(rightResult);
+            availablityList.addAll(leftResult);
+            availablityList.addAll(rightResult);
         }
 
-        return availabilityList;
+        return availablityList;
     }
 
 
-    private List<Availability> getTrainUpdate(TrainUpdateInput trainUpdateInput) {
-        List<Availability> availabilityList = searchService.getTrainUpdateV2(trainUpdateInput);
-        return availabilityList;
+    private List<Availablity> getTrainUpdate(TrainUpdateInput trainUpdateInput) {
+        List<Availablity> availablityList = searchService.getTrainUpdateV2(trainUpdateInput);
+        return availablityList;
     }
 }

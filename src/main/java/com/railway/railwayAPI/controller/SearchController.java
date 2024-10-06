@@ -1,6 +1,6 @@
 package com.railway.railwayAPI.controller;
 
-import com.railway.railwayAPI.model.Availability;
+import com.railway.railwayAPI.model.Availablity;
 import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.SearchResponse;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
@@ -44,7 +44,7 @@ public class SearchController {
     @RequestMapping(value = "/search/trainUpdate", method = RequestMethod.POST)
     public ResponseEntity<?> getTrainUpdate(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        Availability response = null;
+        Availablity response = null;
         try {
             logger.info("Inside '/search/trainUpdate' mapping getTrainUpdate() method of SearchController");
             response = searchService.getTrainUpdate(trainUpdateInput);
@@ -62,7 +62,7 @@ public class SearchController {
     @RequestMapping(value = "/search/availabilityNearBy", method = RequestMethod.POST)
     public ResponseEntity<?> getAvailabilityNearByDays(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        List<Availability> response = null;
+        List<Availablity> response = null;
         try {
             logger.info("Inside '/search/availabilityNearBy' mapping getAvailabilityNearByDays() method of SearchController");
             response = searchService.getAvailabilityNearByDays(trainUpdateInput);
@@ -80,7 +80,7 @@ public class SearchController {
     @RequestMapping(value = "/v3/search/availabilityNearBy", method = RequestMethod.POST)
     public ResponseEntity<?> getAvailabilityNearByDaysV3(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        List<Availability> response = null;
+        List<Availablity> response = null;
         try {
             logger.info("Inside '/search/availabilityNearByV3' mapping getAvailabilityNearByDaysV3() method of SearchController");
             response = searchService.getAvailabilityNearByDaysV3(trainUpdateInput);
@@ -98,7 +98,7 @@ public class SearchController {
     @RequestMapping(value = "/v4/search/availabilityNearBy", method = RequestMethod.POST)
     public ResponseEntity<?> getAvailabilityNearByDaysV4(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        List<Availability> response = null;
+        List<Availablity> response = null;
         try {
             logger.info("Inside '/search/availabilityNearByV4' mapping getAvailabilityNearByDaysV4() method of SearchController");
             response = searchService.getAvailabilityNearByDaysV4(trainUpdateInput);
