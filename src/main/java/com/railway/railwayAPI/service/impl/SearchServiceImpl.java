@@ -3,7 +3,7 @@ package com.railway.railwayAPI.service.impl;
 import com.railway.railwayAPI.common.Utils;
 import com.railway.railwayAPI.facade.Facade;
 import com.railway.railwayAPI.helper.OutputBuilderHelper;
-import com.railway.railwayAPI.model.Availability;
+import com.railway.railwayAPI.model.Availablity;
 import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.SearchResponse;
 import com.railway.railwayAPI.model.Train;
@@ -34,11 +34,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Availability getTrainUpdate(TrainUpdateInput trainUpdateInput) {
+    public Availablity getTrainUpdate(TrainUpdateInput trainUpdateInput) {
         Map<String, Object> map = facade.getTrainUpdates(trainUpdateInput);
-        Availability response = null;
+        Availablity response = null;
         if (map.containsKey("Response")) {
-            response = OutputBuilderHelper.buildAvailability((Map<String, Object>) (
+            response = OutputBuilderHelper.buildAvailabilty((Map<String, Object>) (
                     (Map<String, Object>) ((Map<String, Object>)
                             map.get("Response")).get("Data")).get("details"));
         }
@@ -46,7 +46,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<Availability> getAvailabilityNearByDays(TrainUpdateInput trainUpdateInput) {
+    public List<Availablity> getAvailabilityNearByDays(TrainUpdateInput trainUpdateInput) {
         List<TrainUpdateInput> trainUpdateInputs = new ArrayList<>();
 
         TrainUpdateInput trainUpdateInp = new TrainUpdateInput(trainUpdateInput);
@@ -60,20 +60,20 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<Availability> getAvailabilityNearByDaysV3(TrainUpdateInput trainUpdateInput) {
-        List<Availability> availabilityList = new ArrayList<>();
+    public List<Availablity> getAvailabilityNearByDaysV3(TrainUpdateInput trainUpdateInput) {
+        List<Availablity> availablityList = new ArrayList<>();
         for (int i = 0; i < trainUpdateInput.getNumberOfDays(); i++) {
-            List<Availability> availability = getTrainUpdateV2(trainUpdateInput);
-            if (availability != null) {
-                availabilityList.addAll(availability);
+            List<Availablity> availablity = getTrainUpdateV2(trainUpdateInput);
+            if (availablity != null) {
+                availablityList.addAll(availablity);
             }
             trainUpdateInput.setDoj(Utils.getNextDayDate(trainUpdateInput.getDoj()));
         }
-        return availabilityList;
+        return availablityList;
     }
 
     @Override
-    public List<Availability> getAvailabilityNearByDaysV4(TrainUpdateInput trainUpdateInput) {
+    public List<Availablity> getAvailabilityNearByDaysV4(TrainUpdateInput trainUpdateInput) {
         List<TrainUpdateInput> trainUpdateInputs = new ArrayList<>();
 
         TrainUpdateInput trainUpdateInp = new TrainUpdateInput(trainUpdateInput);
@@ -92,15 +92,15 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ArrayList<Object> getAvailabilityNearByDaysV5(TrainUpdateInput trainUpdateInput) {
         int numberOfDays = trainUpdateInput.getNumberOfDays();
-        List<CompletableFuture<List<Availability>>> futures = new ArrayList<>();
+        List<CompletableFuture<List<Availablity>>> futures = new ArrayList<>();
 
         for (int i = 0; i < numberOfDays; i++) {
             int dayIndex = i;
-            CompletableFuture<List<Availability>> future = CompletableFuture.supplyAsync(() -> {
+            CompletableFuture<List<Availablity>> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    List<Availability> availabilityList = getTrainUpdateV3(trainUpdateInput, dayIndex);
-                    if (availabilityList != null) {
-                        return availabilityList;
+                    List<Availablity> availablityList = getTrainUpdateV3(trainUpdateInput, dayIndex);
+                    if (availablityList != null) {
+                        return availablityList;
                     }
                     return new ArrayList<>();
                 } catch (Exception e) {
@@ -138,7 +138,7 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private List<Availability> getTrainUpdateV3(TrainUpdateInput trainUpdateInput, int day) {
+    private List<Availablity> getTrainUpdateV3(TrainUpdateInput trainUpdateInput, int day) {
         SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), Utils.addDate(trainUpdateInput.getDoj(), day)), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
         List<Train> trains = searchResponse.getTrains();
         if (!trains.isEmpty()) {
@@ -147,7 +147,7 @@ public class SearchServiceImpl implements SearchService {
         return null;
     }
 
-    public List<Availability> getTrainUpdateV2(TrainUpdateInput trainUpdateInput) {
+    public List<Availablity> getTrainUpdateV2(TrainUpdateInput trainUpdateInput) {
         SearchResponse searchResponse = getSearchResults(new SearchInput(trainUpdateInput.getSource(), trainUpdateInput.getDestination(), trainUpdateInput.getDoj()), trainUpdateInput.getTrainNumber(), trainUpdateInput.getclass(), "false");
         List<Train> trains = searchResponse.getTrains();
         if (!trains.isEmpty()) {

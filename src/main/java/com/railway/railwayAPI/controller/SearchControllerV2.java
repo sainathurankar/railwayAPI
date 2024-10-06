@@ -1,6 +1,6 @@
 package com.railway.railwayAPI.controller;
 
-import com.railway.railwayAPI.model.Availability;
+import com.railway.railwayAPI.model.Availablity;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 import com.railway.railwayAPI.service.SearchServiceV2;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class SearchControllerV2 {
     @RequestMapping(value = "/search/availabilityNearBy", method = RequestMethod.POST)
     public ResponseEntity<?> getAvailabilityNearByDays(@RequestBody TrainUpdateInput trainUpdateInput) {
         long startTime = System.currentTimeMillis();
-        List<Availability> response = null;
+        List<Availablity> response = null;
         try {
             log.info("Inside '/search/availabilityNearBy' mapping getAvailabilityNearByDays() method of SearchController");
             response = searchServiceV2.getAvailabilityNearByDays(trainUpdateInput);

@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,11 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
     @Override
     public AutoCompleteResponse getResults(String query) throws JsonProcessingException {
         AutoComplete result = facade.getAutoCompleteResults(query);
-        return buildAutoCompleteResponse(result.getResponse());
+        AutoCompleteResponse response = buildAutoCompletResponse(result.getResponse());
+        return response;
     }
 
-    private AutoCompleteResponse buildAutoCompleteResponse(Map<String, Object> response) {
+    private AutoCompleteResponse buildAutoCompletResponse(Map<String, Object> response) {
         AutoCompleteResponse autoCompleteResponse = new AutoCompleteResponse();
         autoCompleteResponse.setStart((Integer) response.get("start"));
         autoCompleteResponse.setNumFoundExact((Boolean) response.get("numFoundExact"));
