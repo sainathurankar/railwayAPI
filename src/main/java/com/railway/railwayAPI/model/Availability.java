@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Availablity {
+public class Availability {
     private String quota;
     private String className;
     private String status;
@@ -17,5 +17,5 @@ public class Availablity {
     private String fare;
     private String lastUpdatedOn;
     private Long lastUpdatedOnRaw;
-    private String availablityDate;
+    private String availabilityDate;
 }

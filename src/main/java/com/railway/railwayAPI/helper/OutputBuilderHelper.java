@@ -1,7 +1,7 @@
 package com.railway.railwayAPI.helper;
 
 import com.railway.railwayAPI.facade.Facade;
-import com.railway.railwayAPI.model.Availablity;
+import com.railway.railwayAPI.model.Availability;
 import com.railway.railwayAPI.model.SearchInput;
 import com.railway.railwayAPI.model.Train;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
@@ -115,8 +115,8 @@ public class OutputBuilderHelper {
         return train;
     }
 
-    private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) {
-        List<Availablity> availablities = new ArrayList<>();
+    private static List<Availability> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) {
+        List<Availability> availabilities = new ArrayList<>();
         tbsAvailability.stream().filter(availabilityMap -> cls == null || cls.equalsIgnoreCase((String) availabilityMap.get("className"))).forEach(availabilityMap -> {
             TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
             Map<String, Object> avail = new LinkedHashMap<>();
@@ -125,27 +125,27 @@ public class OutputBuilderHelper {
             } else {
                 avail = availabilityMap;
             }
-            availablities.add(buildAvailabilty(avail));
+            availabilities.add(buildAvailability(avail));
         });
-        return availablities;
+        return availabilities;
     }
 
     private static TrainUpdateInput buildTrainUpdateInput(SearchInput searchInput, Map<String, Object> trainMap, Map<String, Object> availabilityMap) {
         return new TrainUpdateInput((String) availabilityMap.get("quota"), (String) trainMap.get("toStnCode"), (String) trainMap.get("fromStnCode"), (String) trainMap.get("trainNumber"), (String) availabilityMap.get("className"), searchInput.getDoj());
     }
 
-    public static Availablity buildAvailabilty(Map<String, Object> availabilityMap) {
-        Availablity availablity = new Availablity();
-        availablity.setQuota((String) availabilityMap.get("quota"));
-        availablity.setClassName((String) availabilityMap.get("className"));
-        availablity.setStatus((String) availabilityMap.get("availablityStatus"));
-        availablity.setSeats((String) availabilityMap.get("availablityNumber"));
-        availablity.setFare(String.valueOf(availabilityMap.get("totalFare")));
-        availablity.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
-        availablity.setAvailablityDate((String) availabilityMap.get("availablityDate"));
+    public static Availability buildAvailability(Map<String, Object> availabilityMap) {
+        Availability availability = new Availability();
+        availability.setQuota((String) availabilityMap.get("quota"));
+        availability.setClassName((String) availabilityMap.get("className"));
+        availability.setStatus((String) availabilityMap.get("availablityStatus"));
+        availability.setSeats((String) availabilityMap.get("availablityNumber"));
+        availability.setFare(String.valueOf(availabilityMap.get("totalFare")));
+        availability.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
+        availability.setAvailabilityDate((String) availabilityMap.get("availablityDate"));
         if (availabilityMap.get("lastUpdatedOnRaw") != null) {
-            availablity.setLastUpdatedOnRaw(Long.valueOf(String.valueOf(availabilityMap.get("lastUpdatedOnRaw"))));
+            availability.setLastUpdatedOnRaw(Long.valueOf(String.valueOf(availabilityMap.get("lastUpdatedOnRaw"))));
         }
-        return availablity;
+        return availability;
     }
 }

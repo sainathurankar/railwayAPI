@@ -22,7 +22,7 @@ public class Train {
     private String duration;
     private String departureDate;
     private String arrivalDate;
-    private List<Availablity> availabilitiesList;
+    private List<Availability> availabilitiesList;
     private String fromStation;
     private String toStation;
     private String fromStationCode;
