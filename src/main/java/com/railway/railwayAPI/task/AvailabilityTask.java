@@ -2,7 +2,7 @@ package com.railway.railwayAPI.task;
 
 import com.railway.railwayAPI.facade.Facade;
 import com.railway.railwayAPI.helper.OutputBuilderHelper;
-import com.railway.railwayAPI.model.Availablity;
+import com.railway.railwayAPI.model.Availability;
 import com.railway.railwayAPI.model.internal.TrainUpdateInput;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.RecursiveTask;
 
 
-public class AvailabilityTask extends RecursiveTask<List<Availablity>> {
+public class AvailabilityTask extends RecursiveTask<List<Availability>> {
     private int startDay;
     private int endDay;
 
@@ -26,13 +26,13 @@ public class AvailabilityTask extends RecursiveTask<List<Availablity>> {
     }
 
     @Override
-    protected List<Availablity> compute() {
-        List<Availablity> availablityList = new ArrayList<>();
+    protected List<Availability> compute() {
+        List<Availability> availabilityList = new ArrayList<>();
 
         if (endDay - startDay <= 1) {
-            Availablity availablity = getTrainUpdate(trainUpdateInputs.get(startDay));
-            if (availablity != null) {
-                availablityList.add(availablity);
+            Availability availability = getTrainUpdate(trainUpdateInputs.get(startDay));
+            if (availability != null) {
+                availabilityList.add(availability);
             }
         } else {
             int mid = (startDay + endDay) / 2;
@@ -41,22 +41,22 @@ public class AvailabilityTask extends RecursiveTask<List<Availablity>> {
             AvailabilityTask rightTask = new AvailabilityTask(trainUpdateInputs, mid, endDay);
 
             leftTask.fork();
-            List<Availablity> rightResult = rightTask.compute();
-            List<Availablity> leftResult = leftTask.join();
+            List<Availability> rightResult = rightTask.compute();
+            List<Availability> leftResult = leftTask.join();
 
-            availablityList.addAll(leftResult);
-            availablityList.addAll(rightResult);
+            availabilityList.addAll(leftResult);
+            availabilityList.addAll(rightResult);
         }
 
-        return availablityList;
+        return availabilityList;
     }
 
 
-    private Availablity getTrainUpdate(TrainUpdateInput trainUpdateInput) {
+    private Availability getTrainUpdate(TrainUpdateInput trainUpdateInput) {
         Map<String, Object> map = facade.getTrainUpdates(trainUpdateInput);
-        Availablity response = null;
+        Availability response = null;
         if (map.containsKey("Response")) {
-            response = OutputBuilderHelper.buildAvailabilty((Map<String, Object>) (
+            response = OutputBuilderHelper.buildAvailability((Map<String, Object>) (
                     (Map<String, Object>) ((Map<String, Object>)
                             map.get("Response")).get("Data")).get("details"));
         }

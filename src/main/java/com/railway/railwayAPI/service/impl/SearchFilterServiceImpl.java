@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Service
 @CacheConfig(cacheNames = "cache")
-public class SearchFilterServiceimpl implements SearchFiltersService {
+public class SearchFilterServiceImpl implements SearchFiltersService {
 
     @Autowired
     private SearchService searchService;
