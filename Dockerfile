@@ -1,5 +1,5 @@
 # Use the official OpenJDK base image with Java 17
-FROM openjdk:17-jdk-alpine
+FROM openjdk:24-ea-17-jdk-oraclelinux8
 EXPOSE 8080
 
 # Set the working directory inside the container
