@@ -1,5 +1,8 @@
 # Use the official OpenJDK base image with Java 17
 FROM openjdk:17-jdk-alpine
+
+RUN apk update && apk upgrade --no-cache
+
 EXPOSE 8080
 
 # Set the working directory inside the container
