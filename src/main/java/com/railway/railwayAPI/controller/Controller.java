@@ -13,4 +13,9 @@ public class Controller {
     public ResponseEntity<?> getStatus() {
         return ResponseEntity.ok().body(Map.of("status", "UP"));
     }
+
+    @RequestMapping(value = "/status", method = RequestMethod.HEAD)
+    public ResponseEntity<?> getStatusMonitor() {
+        return ResponseEntity.ok().body(Map.of("status", "UP"));
+    }
 }
