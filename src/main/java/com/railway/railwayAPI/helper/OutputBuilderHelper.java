@@ -146,6 +146,9 @@ public class OutputBuilderHelper {
         if (availabilityMap.get("lastUpdatedOnRaw") != null) {
             availablity.setLastUpdatedOnRaw(Long.valueOf(String.valueOf(availabilityMap.get("lastUpdatedOnRaw"))));
         }
+        availablity.setAvailablityType((String) availabilityMap.get("availablityType"));
+        availablity.setTG((boolean) availabilityMap.get("isTG"));
+        availablity.setReasonType((String) availabilityMap.get("reasonType"));
         return availablity;
     }
 }
