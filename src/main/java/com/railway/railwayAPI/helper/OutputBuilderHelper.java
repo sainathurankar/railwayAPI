@@ -10,6 +10,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class OutputBuilderHelper {
+    private static Map<String, String> trainStatusMap = Map.of("Available", "AVBL");
+
     private static Facade facade = new Facade();
     public static List<String> getTrainList(SearchInput searchInput, Map<String, Object> map, String trainNumber, String cls) {
         List<Map<String, Object>> trains = getTrainsBetweenStations(map, trainNumber);
@@ -138,7 +140,7 @@ public class OutputBuilderHelper {
         Availablity availablity = new Availablity();
         availablity.setQuota((String) availabilityMap.get("quota"));
         availablity.setClassName((String) availabilityMap.get("className"));
-        availablity.setStatus((String) availabilityMap.get("availablityStatus"));
+        availablity.setStatus(trainStatusMap.getOrDefault((String) availabilityMap.get("availablityStatus"), (String) availabilityMap.get("availablityStatus")));
         availablity.setSeats((String) availabilityMap.get("availablityNumber"));
         availablity.setFare(String.valueOf(availabilityMap.get("totalFare")));
         availablity.setLastUpdatedOn((String) availabilityMap.get("lastUpdatedOn"));
