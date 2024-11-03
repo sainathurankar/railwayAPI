@@ -85,13 +85,17 @@ public class OutputBuilderHelper {
         List<Train> trainList = new ArrayList<>();
         if (trains != null) {
             trains.stream().forEach(train -> {
-                trainList.add(buildTrain(searchInput, train, cls, update));
+                try {
+                    trainList.add(buildTrain(searchInput, train, cls, update));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         }
         return trainList;
     }
 
-    private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls, String update) {
+    private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls, String update) throws Exception {
         Train train = new Train();
         train.setTrainName((String) trainMap.get("trainName"));
         train.setTrainNumber((String) trainMap.get("trainNumber"));
@@ -117,18 +121,25 @@ public class OutputBuilderHelper {
         return train;
     }
 
-    private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) {
+    private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) throws Exception {
         List<Availablity> availablities = new ArrayList<>();
-        tbsAvailability.stream().filter(availabilityMap -> cls == null || (availabilityMap.get("className") != null && cls.equalsIgnoreCase((String) availabilityMap.get("className")))).forEach(availabilityMap -> {
-            TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
-            Map<String, Object> avail = new LinkedHashMap<>();
-            if (Boolean.valueOf(update)) {
-                avail = getDetails((Map<String, Object>) facade.getTrainUpdates(trainUpdateInput).get("Response"));
-            } else {
-                avail = availabilityMap;
-            }
-            availablities.add(buildAvailabilty(avail));
-        });
+        try {
+            tbsAvailability.stream().filter(availabilityMap -> {
+                Object className = availabilityMap.get("className");
+                return cls == null || (className != null && cls.equalsIgnoreCase(className.toString()));
+            }).forEach(availabilityMap -> {
+                TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
+                Map<String, Object> avail = new LinkedHashMap<>();
+                if (Boolean.valueOf(update)) {
+                    avail = getDetails((Map<String, Object>) facade.getTrainUpdates(trainUpdateInput).get("Response"));
+                } else {
+                    avail = availabilityMap;
+                }
+                availablities.add(buildAvailabilty(avail));
+            });
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
         return availablities;
     }
 
