@@ -119,7 +119,7 @@ public class OutputBuilderHelper {
 
     private static List<Availablity> buildAvailabiltyList(SearchInput searchInput, Map<String, Object> trainMap, List<Map<String, Object>> tbsAvailability, String cls, String update) {
         List<Availablity> availablities = new ArrayList<>();
-        tbsAvailability.stream().filter(availabilityMap -> cls == null || cls.equalsIgnoreCase((String) availabilityMap.get("className"))).forEach(availabilityMap -> {
+        tbsAvailability.stream().filter(availabilityMap -> cls == null || (availabilityMap.get("className") != null && cls.equalsIgnoreCase((String) availabilityMap.get("className")))).forEach(availabilityMap -> {
             TrainUpdateInput trainUpdateInput = buildTrainUpdateInput(searchInput, trainMap, availabilityMap);
             Map<String, Object> avail = new LinkedHashMap<>();
             if (Boolean.valueOf(update)) {
