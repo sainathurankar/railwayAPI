@@ -37,6 +37,16 @@ public class Train {
     private String runningSat;
     private String runningSun;
 
+    // --- Journey richness (Feature 6) ---
+    private Integer distance;              // km between src and dst
+    private Boolean isFastest;             // fastest train on the route
+    private Boolean isPopular;             // most-booked on the route
+    private String boardingHaltTime;       // e.g. "10 min halt"
+    private String droppingHaltTime;
+    private List<String> trainType;        // e.g. ["O"] original rake
+    private Long departureTimeEpochInSec;  // precise sort / countdown
+    private Long arrivalTimeEpochInSec;
+
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         Field[] fields = this.getClass().getDeclaredFields();
@@ -51,4 +61,3 @@ public class Train {
         return map;
     }
 }
-

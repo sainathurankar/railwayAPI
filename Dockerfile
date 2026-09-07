@@ -1,5 +1,7 @@
-# Use the official OpenJDK base image with Java 17
-FROM openjdk:17-jdk-alpine
+# Use the official Eclipse Temurin base image with Java 17
+# (the old `openjdk:17-jdk-alpine` image was removed from Docker Hub —
+#  the `openjdk` repo is deprecated; Temurin is its Alpine-based successor)
+FROM eclipse-temurin:17-jdk-alpine
 
 RUN apk update && apk upgrade --no-cache
 
