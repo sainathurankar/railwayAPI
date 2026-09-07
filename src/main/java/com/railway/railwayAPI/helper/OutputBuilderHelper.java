@@ -95,6 +95,50 @@ public class OutputBuilderHelper {
         return trainList;
     }
 
+    /**
+     * Builds the recommended train (redBus "recommendation") if present.
+     * Returns null when the route has no recommendation.
+     */
+    public static Train getRecommendation(SearchInput searchInput, Map<String, Object> map, String cls, String update) {
+        Map<String, Object> details = getDetails(map);
+        if (details == null) {
+            return null;
+        }
+        Object recObj = details.get("recommendation");
+        if (!(recObj instanceof List) || ((List<?>) recObj).isEmpty()) {
+            return null;
+        }
+        Map<String, Object> recMap = (Map<String, Object>) ((List<?>) recObj).get(0);
+        try {
+            Train train = buildTrain(searchInput, recMap, cls, update);
+            return train;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** Extracts the tag list from the first recommendation entry (e.g. "Handpicked for you"). */
+    public static List<String> getRecommendationTags(Map<String, Object> map) {
+        Map<String, Object> details = getDetails(map);
+        if (details == null) {
+            return null;
+        }
+        Object recObj = details.get("recommendation");
+        if (!(recObj instanceof List) || ((List<?>) recObj).isEmpty()) {
+            return null;
+        }
+        Map<String, Object> recMap = (Map<String, Object>) ((List<?>) recObj).get(0);
+        Object tags = recMap.get("tags");
+        return tags instanceof List ? (List<String>) tags : null;
+    }
+
+    /** Passes a details-level structure straight through (filters, sort, quotas, offers). */
+    public static Object getPassthrough(Map<String, Object> map, String key) {
+        Map<String, Object> details = getDetails(map);
+        return details != null ? details.get(key) : null;
+    }
+
     private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls, String update) throws Exception {
         Train train = new Train();
         train.setTrainName((String) trainMap.get("trainName"));
@@ -118,6 +162,15 @@ public class OutputBuilderHelper {
         train.setRunningFri((String) trainMap.get("runningFri"));
         train.setRunningSat((String) trainMap.get("runningSat"));
         train.setRunningSun((String) trainMap.get("runningSun"));
+        // --- Journey richness (Feature 6) ---
+        train.setDistance(asInteger(trainMap.get("distance")));
+        train.setIsFastest((Boolean) trainMap.getOrDefault("isFastest", null));
+        train.setIsPopular((Boolean) trainMap.getOrDefault("isPopular", null));
+        train.setBoardingHaltTime((String) trainMap.getOrDefault("boardingHaltTime", null));
+        train.setDroppingHaltTime((String) trainMap.getOrDefault("droppingHaltTime", null));
+        train.setTrainType(trainMap.get("trainType") instanceof List ? (List<String>) trainMap.get("trainType") : null);
+        train.setDepartureTimeEpochInSec(asLong(trainMap.get("departureTimeEpochInSec")));
+        train.setArrivalTimeEpochInSec(asLong(trainMap.get("arrivalTimeEpochInSec")));
         return train;
     }
 
@@ -162,6 +215,53 @@ public class OutputBuilderHelper {
         availablity.setAvailablityType((String) availabilityMap.getOrDefault("availablityType", null));
         availablity.setTG((boolean) availabilityMap.getOrDefault("isTG", false));
         availablity.setReasonType((String) availabilityMap.getOrDefault("reasonType", null));
+
+        // --- Confirmation prediction (Feature 1) ---
+        availablity.setPredictionPercentage(asInteger(availabilityMap.get("predictionPercentage")));
+        availablity.setRacCnfPredictionPercentage(asInteger(availabilityMap.get("racCnfPredictionPercentage")));
+        availablity.setLbPredictionPercentage(asDouble(availabilityMap.get("lbPredictionPercentage")));
+        availablity.setLbPredictionData((String) availabilityMap.getOrDefault("lbPredictionData", null));
+
+        // --- Fare transparency (Feature 2) ---
+        availablity.setOriginalFare(asInteger(availabilityMap.get("originalFare")));
+        availablity.setFareDifference(asInteger(availabilityMap.get("fareDifference")));
+
+        // --- Boarding / dropping override (Feature 7) ---
+        availablity.setFrmStnName((String) availabilityMap.getOrDefault("frmStnName", null));
+        availablity.setFrmStnCode((String) availabilityMap.getOrDefault("frmStnCode", null));
+        availablity.setFrmStnDepartureTime((String) availabilityMap.getOrDefault("frmStnDepartureTime", null));
+        availablity.setFrmStnDepartureDate((String) availabilityMap.getOrDefault("frmStnDepartureDate", null));
+        availablity.setToStnName((String) availabilityMap.getOrDefault("toStnName", null));
+        availablity.setToStnCode((String) availabilityMap.getOrDefault("toStnCode", null));
+        availablity.setToStnArrivalTime((String) availabilityMap.getOrDefault("toStnArrivalTime", null));
+        availablity.setToStnArrivalDate((String) availabilityMap.getOrDefault("toSntArrivalDate", null));
+
+        // --- Extra classification / Tatkal context ---
+        availablity.setClassType((String) availabilityMap.getOrDefault("classType", null));
+        availablity.setCurrentBkgFlag((String) availabilityMap.getOrDefault("currentBkgFlag", null));
+        availablity.setWlType(availabilityMap.get("wlType") != null ? String.valueOf(availabilityMap.get("wlType")) : null);
+        availablity.setTgType(asInteger(availabilityMap.get("tgType")));
+        availablity.setTgPremiumPercentage(asInteger(availabilityMap.get("tgPremiumPercentage")));
+        availablity.setIsRacSg((Boolean) availabilityMap.getOrDefault("isRacSg", null));
         return availablity;
+    }
+
+    // ---- null-safe numeric coercion (redBus mixes Integer/Double/String) ----
+    private static Integer asInteger(Object o) {
+        if (o == null) return null;
+        if (o instanceof Number) return ((Number) o).intValue();
+        try { return Integer.valueOf(String.valueOf(o).trim()); } catch (NumberFormatException e) { return null; }
+    }
+
+    private static Long asLong(Object o) {
+        if (o == null) return null;
+        if (o instanceof Number) return ((Number) o).longValue();
+        try { return Long.valueOf(String.valueOf(o).trim()); } catch (NumberFormatException e) { return null; }
+    }
+
+    private static Double asDouble(Object o) {
+        if (o == null) return null;
+        if (o instanceof Number) return ((Number) o).doubleValue();
+        try { return Double.valueOf(String.valueOf(o).trim()); } catch (NumberFormatException e) { return null; }
     }
 }

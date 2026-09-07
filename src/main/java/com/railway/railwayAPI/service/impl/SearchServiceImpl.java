@@ -161,11 +161,27 @@ public class SearchServiceImpl implements SearchService {
         SearchResponse searchResponse = new SearchResponse();
 //        searchResponse.setError((String) map.get("Error"));
 //        searchResponse.setResponse(map.get("Response"));
+        Map<String, Object> response = (Map<String, Object>) map.get("Response");
         searchResponse.setStatus(map.get("Status"));
-        searchResponse.setTrainList(OutputBuilderHelper.getTrainList(searchInput, (Map<String, Object>) map.get("Response"), trainNumber, cls));
-        searchResponse.setTrains(OutputBuilderHelper.getTrainListV2(searchInput, (Map<String, Object>) map.get("Response"),trainNumber, cls, update));
-        searchResponse.setErrorCode((String) OutputBuilderHelper.getDetails((Map<String, Object>) map.get("Response")).get("errorcode"));
-        searchResponse.setDetailedMsg((String) OutputBuilderHelper.getDetails((Map<String, Object>) map.get("Response")).get("detailedmsg"));
+        searchResponse.setTrainList(OutputBuilderHelper.getTrainList(searchInput, response, trainNumber, cls));
+        searchResponse.setTrains(OutputBuilderHelper.getTrainListV2(searchInput, response, trainNumber, cls, update));
+        searchResponse.setErrorCode((String) OutputBuilderHelper.getDetails(response).get("errorcode"));
+        searchResponse.setDetailedMsg((String) OutputBuilderHelper.getDetails(response).get("detailedmsg"));
+        // --- New: recommendation, offers, catalog passthrough, route confidence ---
+        try {
+            searchResponse.setRecommendation(OutputBuilderHelper.getRecommendation(searchInput, response, cls, "false"));
+            searchResponse.setRecommendationTags(OutputBuilderHelper.getRecommendationTags(response));
+            Object offers = OutputBuilderHelper.getPassthrough(response, "offers");
+            searchResponse.setOffers(offers instanceof List ? (List<Object>) offers : null);
+            Object composite = OutputBuilderHelper.getPassthrough(response, "compositeAvailability");
+            searchResponse.setCompositeAvailability(composite != null ? String.valueOf(composite) : null);
+            searchResponse.setFilters(OutputBuilderHelper.getPassthrough(response, "filters"));
+            searchResponse.setSort(OutputBuilderHelper.getPassthrough(response, "sort"));
+            searchResponse.setQuotas(OutputBuilderHelper.getPassthrough(response, "quotas"));
+        } catch (Exception e) {
+            // Enrichment is best-effort; never fail the core search on optional fields.
+            e.printStackTrace();
+        }
         return searchResponse;
     }
 }
