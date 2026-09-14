@@ -139,6 +139,28 @@ public class OutputBuilderHelper {
         return details != null ? details.get(key) : null;
     }
 
+    /**
+     * Maps the raw redBus {@code "Status"} object (e.g. {@code {StatusCode, StatusMsg}})
+     * into a typed {@link com.railway.railwayAPI.model.ResponseStatus}. Tolerant of
+     * missing/odd shapes — returns null when there is nothing usable.
+     */
+    public static com.railway.railwayAPI.model.ResponseStatus buildResponseStatus(Object raw) {
+        if (!(raw instanceof Map)) {
+            return null;
+        }
+        Map<?, ?> statusMap = (Map<?, ?>) raw;
+        com.railway.railwayAPI.model.ResponseStatus status = new com.railway.railwayAPI.model.ResponseStatus();
+        Object code = statusMap.get("StatusCode");
+        if (code instanceof Number) {
+            status.setStatusCode(((Number) code).intValue());
+        }
+        Object msg = statusMap.get("StatusMsg");
+        if (msg != null) {
+            status.setStatusMsg(String.valueOf(msg));
+        }
+        return status;
+    }
+
     private static Train buildTrain(SearchInput searchInput, Map<String, Object> trainMap, String cls, String update) throws Exception {
         Train train = new Train();
         train.setTrainName((String) trainMap.get("trainName"));

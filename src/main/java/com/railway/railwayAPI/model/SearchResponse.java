@@ -14,8 +14,7 @@ import java.util.List;
 public class SearchResponse {
     private String errorCode;
     private String detailedMsg;
-    private Object response;
-    private Object status;
+    private ResponseStatus status;
     private List<String> trainList;
     private List<Train> trains;
 
