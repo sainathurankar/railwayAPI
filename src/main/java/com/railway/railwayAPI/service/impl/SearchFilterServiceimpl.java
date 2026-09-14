@@ -1,12 +1,12 @@
 package com.railway.railwayAPI.service.impl;
 
+import com.railway.railwayAPI.config.CacheConfig;
 import com.railway.railwayAPI.config.SearchConfigLoader;
 import com.railway.railwayAPI.config.model.FilterConfig;
 import com.railway.railwayAPI.model.*;
 import com.railway.railwayAPI.service.SearchFiltersService;
 import com.railway.railwayAPI.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,6 @@ import java.util.Map;
 
 
 @Service
-@CacheConfig(cacheNames = "cache")
 public class SearchFilterServiceimpl implements SearchFiltersService {
 
     @Autowired
@@ -26,7 +25,7 @@ public class SearchFilterServiceimpl implements SearchFiltersService {
     @Autowired
     private SearchConfigLoader searchConfigLoader;
 
-    @Cacheable(key = "#searchInput", unless = "#result == null")
+    @Cacheable(cacheNames = CacheConfig.SEARCH_FILTERS_CACHE, key = "#searchInput", unless = "#result == null")
     @Override
     public SearchFilterResponse getFilters(SearchInput searchInput) {
         SearchResponse response = searchService.getSearchResults(searchInput, null, null, null);

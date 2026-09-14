@@ -49,6 +49,14 @@
 			<artifactId>caffeine</artifactId>
 		</dependency>
 
+		<!-- Apache HttpClient 5: pooled connection manager for the shared
+		     RestTemplate that fronts all redBus calls (version managed by
+		     the Spring Boot parent). -->
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+		</dependency>
+
 		<dependency>
     		<groupId>org.springdoc</groupId>
     		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
